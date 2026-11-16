@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'self'">
+<title>Screen Solver</title>
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; background: transparent; overflow: hidden; }
+  body {
+    font: 13px/1.5 -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif;
+    color: #e9eaee;
+    -webkit-font-smoothing: antialiased;
+  }
+  #card {
+    --accent: #6ea8ff;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    background: rgba(17, 18, 23, var(--alpha, 0.5));
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.75);
+    border-radius: 14px;
+    overflow: hidden;
+  }
+  #card[data-state="done"] { --accent: #4fd38a; }
+  #card[data-state="error"] { --accent: #ff6b6b; }
+  #card.pop { animation: pop 0.16s ease-out; }
+  @keyframes pop {
+    from { opacity: 0; transform: translateY(8px) scale(0.985); }
+    to { opacity: 1; transform: none; }
+  }
+
+  #header {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 13px 8px;
+    font-size: 11px;
+    color: #8f929c;
+    flex: none;
+  }
+  #dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--accent);
+    flex: none;
+  }
+  #card[data-state="working"] #dot { animation: pulse 0.9s ease-in-out infinite; }
+  @keyframes pulse { 50% { opacity: 0.25; transform: scale(0.7); } }
+  #label { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  #time { font-variant-numeric: tabular-nums; color: #b9bcc6; }
+
+  /* Ladebalken unter der Kopfzeile */
+  #header::after {
+    content: "";
+    position: absolute; left: 0; right: 0; bottom: 0; height: 1px;
+    background: rgba(255, 255, 255, 0.05);
+  }
+  #card[data-state="working"] #header::after {
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    background-size: 45% 100%;
+    background-repeat: no-repeat;
+    animation: sweep 1s linear infinite;
+  }
+  @keyframes sweep {
+    from { background-position: -80% 0; }
+    to { background-position: 180% 0; }
+  }
+
+  #content {
+    flex: 1; min-height: 0; overflow-y: auto; padding: 6px 15px 10px;
+    user-select: text; -webkit-user-select: text; cursor: text;
+  }
+  ::selection { background: rgba(110, 168, 255, 0.45); }
+  #header { user-select: none; -webkit-user-select: none; }
+  #content::-webkit-scrollbar { width: 6px; }
+  #content::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.18); border-radius: 3px; }
+  #content > :first-child { margin-top: 6px; }
+  #content > :last-child { margin-bottom: 4px; }
+  /* Das Ergebnis in der ersten Zeile groß */
+  #content > p:first-child { font-size: 18px; line-height: 1.35; color: #fff; }
+  h1, h2, h3 { font-size: 14px; margin: 12px 0 4px; color: #fff; }
+  p { margin: 7px 0; }
+  ul, ol { padding-left: 20px; margin: 7px 0; }
+  li { margin: 2px 0; }
+  strong { color: #fff; font-weight: 650; }
+  code {
+    font: 12px ui-monospace, "SF Mono", Menlo, monospace;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 1px 5px;
+    border-radius: 4px;
+  }
+  pre {
+    background: rgba(0, 0, 0, 0.3);
+    padding: 9px 11px;
+    border-radius: 9px;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+  pre code { background: none; padding: 0; }
+  table { border-collapse: collapse; margin: 8px 0; }
+  th, td { border: 1px solid rgba(255, 255, 255, 0.14); padding: 3px 8px; }
+
+</style>
+</head>
+<body>
+  <div id="card" data-state="working">
+    <div id="header">
+      <span id="dot"></span>
+      <span id="label">Bereit</span>
+      <span id="time"></span>
+    </div>
+    <div id="content"></div>
+  </div>
+  <script src="renderer.js"></script>
+</body>
+</html>

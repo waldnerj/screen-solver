@@ -1,0 +1,17 @@
+{
+  "name": "screen-solver",
+  "version": "1.0.0",
+  "description": "Liest per Hotkey den Bildschirm und zeigt die Lösung unten rechts als Overlay an (macOS).",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "latest",
+    "dotenv": "^16.4.5",
+    "marked": "^12.0.2"
+  },
+  "devDependencies": {
+    "electron": "latest"
+  }
+}
