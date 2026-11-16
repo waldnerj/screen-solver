@@ -49,8 +49,11 @@ const GEMINI_FALLBACKS = (env('GEMINI_FALLBACK_MODELS') || 'gemini-flash-latest'
 const GEMINI_URL = env('GEMINI_BASE_URL') || 'https://generativelanguage.googleapis.com';
 const OLLAMA_URL = env('OLLAMA_URL') || 'http://127.0.0.1:11434';
 const FIRST_BYTE_TIMEOUT = 15000; // ms, danach nächstes Modell
-// Deckkraft des Overlay-Hintergrunds: 0.15 (fast durchsichtig) bis 1 (deckend)
-const BG_OPACITY = Math.max(0.15, Math.min(1, parseFloat(env('OVERLAY_OPACITY')) || 0.5));
+// Deckkraft des Overlay-Hintergrunds: 0 (kein Hintergrund, nur Text) bis 1 (deckend)
+const BG_OPACITY = (() => {
+  const v = parseFloat(env('OVERLAY_OPACITY'));
+  return Number.isFinite(v) ? Math.max(0, Math.min(1, v)) : 0;
+})();
 // ──────────────────────────────────────────
 
 let win = null;
